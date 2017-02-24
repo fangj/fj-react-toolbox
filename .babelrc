@@ -1,0 +1,8 @@
+{
+  "presets": ["es2015","react"],
+  "plugins": ["syntax-async-functions","transform-regenerator", //支持async/await
+  "transform-class-properties", //支持static propTypes
+  "transform-decorators-legacy", //支持@装饰器
+  "transform-object-rest-spread" //...语法
+  ]
+}
