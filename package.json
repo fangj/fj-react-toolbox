@@ -1,5 +1,5 @@
 {
-  "name": "react-fj-toolbox",
+  "name": "fj-react-toolbox",
   "version": "0.0.1",
   "description": "react component toolbox ",
   "main": "index.js",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fangj/react-fj-toolbox.git"
+    "url": "git+https://github.com/fangj/fj-react-toolbox.git"
   },
   "keywords": [
     "react",
@@ -20,9 +20,9 @@
   "author": "Fang Jian",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/fangj/react-fj-toolbox/issues"
+    "url": "https://github.com/fangj/fj-react-toolbox/issues"
   },
-  "homepage": "https://github.com/fangj/react-fj-toolbox#readme",
+  "homepage": "https://github.com/fangj/fj-react-toolbox#readme",
   "devDependencies": {
     "babel-core": "^6.18.2",
     "babel-loader": "^6.2.8",
