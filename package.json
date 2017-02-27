@@ -35,5 +35,9 @@
     "babel-plugin-transform-object-rest-spread": "^6.19.0",
     "json-loader": "^0.5.4",
     "rimraf": "^2.5.2"
+  },
+  "dependencies": {
+    "axios": "^0.15.3",
+    "mockjs": "^1.0.1-beta3"
   }
 }

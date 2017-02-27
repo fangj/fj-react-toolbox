@@ -16,7 +16,8 @@ module.exports={
         //  on the global var React
         "react": "React",
         "react-dom": "ReactDOM",
-        "pubsub-js":"PubSub"
+        "pubsub-js":"PubSub",
+        "mockjs":"Mock"
   },
   module:{
     loaders:[
