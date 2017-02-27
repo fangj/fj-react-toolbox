@@ -67,7 +67,7 @@ export default class PromiseFactoryView extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if(this.props.promise!=nextProps.promise){
-      doPromise(nextProps);
+      this.doPromise(nextProps);
     }
   }
 
