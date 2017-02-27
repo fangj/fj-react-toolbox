@@ -1,4 +1,4 @@
-webpackJsonp([0],[
+webpackJsonp([1],[
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -16,31 +16,35 @@ webpackJsonp([0],[
 
 	var _CRUDReader2 = _interopRequireDefault(_CRUDReader);
 
-	var _RestReader = __webpack_require__(8);
+	var _RestReader = __webpack_require__(6);
 
 	var _RestReader2 = _interopRequireDefault(_RestReader);
 
+	var _CRUDWriter = __webpack_require__(35);
+
+	var _CRUDWriter2 = _interopRequireDefault(_CRUDWriter);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var PubSub = __webpack_require__(6);
-	var Mock = __webpack_require__(7);
+	var PubSub = __webpack_require__(36);
+	var Mock = __webpack_require__(37);
 
 	var getValue = function getValue(v) {
-						return Promise.resolve("id:" + v + "/" + Math.random());
+		return Promise.resolve("id:" + v + "/" + Math.random());
 	};
 	var api = { get: getValue };
-	var ValueShower = function ValueShower(_ref) {
-						var value = _ref.value;
-						return _react2.default.createElement(
-											'div',
-											null,
-											JSON.stringify(value)
-						);
+	var DataShower = function DataShower(_ref) {
+		var data = _ref.data;
+		return _react2.default.createElement(
+			'div',
+			null,
+			JSON.stringify(data)
+		);
 	};
 	var RandomValue = _react2.default.createElement(
-						_CRUDReader2.default,
-						{ api: api, id: '42', ns: 'RandomValue' },
-						_react2.default.createElement(ValueShower, null)
+		_CRUDReader2.default,
+		{ api: api, id: '42', ns: 'RandomValue' },
+		_react2.default.createElement(DataShower, null)
 	);
 	//PubSub.publish("RandomValue") 刷新
 
@@ -48,49 +52,135 @@ webpackJsonp([0],[
 	Mock.mock("/mockemail/", '@EMAIL'); //假数据
 
 	var EmailReader = _react2.default.createElement(
-						_RestReader2.default,
-						{ url: '/mockemail', ns: 'EmailReader' },
-						_react2.default.createElement(ValueShower, null)
+		_RestReader2.default,
+		{ url: '/mockemail', ns: 'EmailReader' },
+		_react2.default.createElement(DataShower, null)
 	);
 	//PubSub.publish("EmailReader") 刷新
 
 
+	/**
+	 * api.create(obj)   => 创建 object
+	 * api.get(id)       => 读取 object
+	 * api.get()         => 读取 所有object
+	 * api.update(obj,id)=> 更新 object
+	 * api.destroy(id)   => 删除 object
+	 */
+	var api2 = {
+		get: function get(id) {
+			return Promise.resolve(id);
+		},
+		create: function create(obj) {
+			console.log("create", obj);return Promise.resolve(obj);
+		},
+		update: function update(obj, id) {
+			console.log("update", obj, id);return Promise.resolve(obj);
+		},
+		destory: function destory(id) {
+			console.log("destroy", id);return Promise.resolve(id);
+		}
+	};
+
+	var Creater = function Creater(_ref2) {
+		var save = _ref2.save;
+		return _react2.default.createElement(
+			'div',
+			null,
+			_react2.default.createElement(
+				'button',
+				{ onClick: function onClick() {
+						return save("creater");
+					} },
+				'save("creater")'
+			)
+		);
+	};
+	var Updater = function Updater(_ref3) {
+		var data = _ref3.data,
+		    update = _ref3.update,
+		    remove = _ref3.remove;
+		return _react2.default.createElement(
+			'div',
+			null,
+			data,
+			_react2.default.createElement(
+				'button',
+				{ onClick: function onClick() {
+						return update("update");
+					} },
+				'update("update")'
+			),
+			_react2.default.createElement(
+				'button',
+				{ onClick: function onClick() {
+						return remove();
+					} },
+				'remove()'
+			)
+		);
+	};
+	var WriterWithID = _react2.default.createElement(
+		_CRUDWriter2.default,
+		{ api: api2, id: '20' },
+		_react2.default.createElement(Updater, null)
+	);
+	var WriterWithoutID = _react2.default.createElement(
+		_CRUDWriter2.default,
+		{ api: api2 },
+		_react2.default.createElement(Creater, null)
+	);
+
 	_reactDom2.default.render(_react2.default.createElement(
-						'ul',
-						null,
-						_react2.default.createElement(
-											'li',
-											null,
-											_react2.default.createElement(
-																'button',
-																{ onClick: function onClick() {
-																										return PubSub.publish("RandomValue");
-																					} },
-																'PubSub.publish("RandomValue")'
-											)
-						),
-						_react2.default.createElement(
-											'li',
-											null,
-											RandomValue
-						),
-						_react2.default.createElement(
-											'li',
-											null,
-											_react2.default.createElement(
-																'button',
-																{ onClick: function onClick() {
-																										return PubSub.publish("EmailReader");
-																					} },
-																'PubSub.publish("EmailReader")'
-											)
-						),
-						_react2.default.createElement(
-											'li',
-											null,
-											EmailReader
-						),
-						_react2.default.createElement('li', null)
+		'ul',
+		null,
+		_react2.default.createElement(
+			'li',
+			null,
+			_react2.default.createElement(
+				'button',
+				{ onClick: function onClick() {
+						return PubSub.publish("RandomValue");
+					} },
+				'PubSub.publish("RandomValue")'
+			)
+		),
+		_react2.default.createElement(
+			'li',
+			null,
+			RandomValue
+		),
+		_react2.default.createElement(
+			'li',
+			null,
+			_react2.default.createElement(
+				'button',
+				{ onClick: function onClick() {
+						return PubSub.publish("EmailReader");
+					} },
+				'PubSub.publish("EmailReader")'
+			)
+		),
+		_react2.default.createElement(
+			'li',
+			null,
+			EmailReader
+		),
+		_react2.default.createElement(
+			'li',
+			null,
+			'TestWriter'
+		),
+		_react2.default.createElement(
+			'li',
+			null,
+			WriterWithID
+		),
+		_react2.default.createElement(
+			'li',
+			null,
+			WriterWithoutID
+		),
+		_react2.default.createElement('li', null)
 	), document.getElementById('root'));
 
 /***/ },
@@ -111,30 +201,44 @@ webpackJsonp([0],[
 
 	"use strict";
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	var _PromiseFactoryView = __webpack_require__(4);
 
 	var _PromiseFactoryView2 = _interopRequireDefault(_PromiseFactoryView);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; } /**
+	                                                                                                                                                                                                                             CRUDReader
+	                                                                                                                                                                                                                             * -> :api  //CRUD api
+	                                                                                                                                                                                                                             * -> :id  //item id
+	                                                                                                                                                                                                                             * ↓  :data //注入的数据
+	                                                                                                                                                                                                                             *
+	                                                                                                                                                                                                                             * api
+	                                                                                                                                                                                                                              * api.create(obj)   => 创建 object
+	                                                                                                                                                                                                                              * api.get(id)       => 读取 object
+	                                                                                                                                                                                                                              * api.get()         => 读取 所有object
+	                                                                                                                                                                                                                              * api.update(obj,id)=> 更新 object
+	                                                                                                                                                                                                                              * api.destroy(id)   => 删除 object
+	                                                                                                                                                                                                                             **/
+
 	module.exports = function (_ref) {
-		var api = _ref.api,
-		    id = _ref.id,
-		    _ref$ns = _ref.ns,
-		    ns = _ref$ns === undefined ? "CRUDReader" : _ref$ns,
-		    children = _ref.children;
-		return React.createElement(
-			_PromiseFactoryView2.default,
-			{ promiseFactory: function promiseFactory() {
-					return api.get(id);
-				}, then: "value", ns: ns },
-			children
-		);
-	}; /**
-	   -> :api  //crud api
-	   -> :id  //item id
-	   ↓  :data //注入的数据
-	   **/
+	  var api = _ref.api,
+	      id = _ref.id,
+	      _ref$ns = _ref.ns,
+	      ns = _ref$ns === undefined ? "CRUDReader" : _ref$ns,
+	      children = _ref.children,
+	      others = _objectWithoutProperties(_ref, ["api", "id", "ns", "children"]);
+
+	  return React.createElement(
+	    _PromiseFactoryView2.default,
+	    _extends({ promiseFactory: function promiseFactory() {
+	        return api.get(id);
+	      }, then: "data", ns: ns }, others),
+	    children
+	  );
+	};
 
 /***/ },
 /* 4 */
@@ -147,6 +251,8 @@ webpackJsonp([0],[
 	});
 	exports.default = undefined;
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(1);
@@ -156,6 +262,8 @@ webpackJsonp([0],[
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -239,18 +347,20 @@ webpackJsonp([0],[
 	      var _props = this.props,
 	          then = _props.then,
 	          _catch = _props._catch,
-	          children = _props.children;
+	          children = _props.children,
+	          others = _objectWithoutProperties(_props, ['then', '_catch', 'children']);
+
 	      var _state = this.state,
 	          value = _state.value,
 	          reason = _state.reason;
 
 	      var child = _react2.default.Children.only(children); //children只能有1个
 	      if (value !== undefined) {
-	        var v = _react2.default.cloneElement(child, _defineProperty({}, then, value));
+	        var v = _react2.default.cloneElement(child, _extends(_defineProperty({}, then, value), others));
 	        return v;
 	      }
 	      if (reason !== undefined && _catch !== undefined) {
-	        var _v = _react2.default.cloneElement(child, _defineProperty({}, _catch, value));
+	        var _v = _react2.default.cloneElement(child, _extends(_defineProperty({}, _catch, value), others));
 	        return _v;
 	      }
 	      return null;
@@ -300,29 +410,17 @@ webpackJsonp([0],[
 
 /***/ },
 /* 6 */
-/***/ function(module, exports) {
-
-	module.exports = PubSub;
-
-/***/ },
-/* 7 */
-/***/ function(module, exports) {
-
-	module.exports = Mock;
-
-/***/ },
-/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var _CRUDReader = __webpack_require__(9);
+	var _CRUDReader = __webpack_require__(7);
 
 	var _CRUDReader2 = _interopRequireDefault(_CRUDReader);
 
-	var _rest_api_factory = __webpack_require__(10);
+	var _rest_api_factory = __webpack_require__(8);
 
 	var _rest_api_factory2 = _interopRequireDefault(_rest_api_factory);
 
@@ -336,17 +434,24 @@ webpackJsonp([0],[
 	                                                                                                                                                                                                                             **/
 
 	module.exports = function (_ref) {
-	  var url = _ref.url,
-	      props = _objectWithoutProperties(_ref, ['url']);
+													var url = _ref.url,
+													    children = _ref.children,
+													    props = _objectWithoutProperties(_ref, ['url', 'children']);
 
-	  return React.createElement(_CRUDReader2.default, _extends({ api: (0, _rest_api_factory2.default)(url) }, props));
+													return React.createElement(
+																									_CRUDReader2.default,
+																									_extends({ api: (0, _rest_api_factory2.default)(url) }, props),
+																									children
+													);
 	};
 
 /***/ },
-/* 9 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _PromiseFactoryView = __webpack_require__(4);
 
@@ -354,27 +459,39 @@ webpackJsonp([0],[
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; } /**
+	                                                                                                                                                                                                                             CRUDReader
+	                                                                                                                                                                                                                             * -> :api  //CRUD api
+	                                                                                                                                                                                                                             * -> :id  //item id
+	                                                                                                                                                                                                                             * ↓  :data //注入的数据
+	                                                                                                                                                                                                                             *
+	                                                                                                                                                                                                                             * api
+	                                                                                                                                                                                                                              * api.create(obj)   => 创建 object
+	                                                                                                                                                                                                                              * api.get(id)       => 读取 object
+	                                                                                                                                                                                                                              * api.get()         => 读取 所有object
+	                                                                                                                                                                                                                              * api.update(obj,id)=> 更新 object
+	                                                                                                                                                                                                                              * api.destroy(id)   => 删除 object
+	                                                                                                                                                                                                                             **/
+
 	module.exports = function (_ref) {
-		var api = _ref.api,
-		    id = _ref.id,
-		    _ref$ns = _ref.ns,
-		    ns = _ref$ns === undefined ? "CRUDReader" : _ref$ns,
-		    children = _ref.children;
-		return React.createElement(
-			_PromiseFactoryView2.default,
-			{ promiseFactory: function promiseFactory() {
-					return api.get(id);
-				}, then: "value", ns: ns },
-			children
-		);
-	}; /**
-	   -> :api  //crud api
-	   -> :id  //item id
-	   ↓  :data //注入的数据
-	   **/
+	  var api = _ref.api,
+	      id = _ref.id,
+	      _ref$ns = _ref.ns,
+	      ns = _ref$ns === undefined ? "CRUDReader" : _ref$ns,
+	      children = _ref.children,
+	      others = _objectWithoutProperties(_ref, ["api", "id", "ns", "children"]);
+
+	  return React.createElement(
+	    _PromiseFactoryView2.default,
+	    _extends({ promiseFactory: function promiseFactory() {
+	        return api.get(id);
+	      }, then: "data", ns: ns }, others),
+	    children
+	  );
+	};
 
 /***/ },
-/* 10 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -383,7 +500,7 @@ webpackJsonp([0],[
 		value: true
 	});
 
-	var _axios = __webpack_require__(11);
+	var _axios = __webpack_require__(9);
 
 	var _axios2 = _interopRequireDefault(_axios);
 
@@ -447,21 +564,21 @@ webpackJsonp([0],[
 	exports.default = restApiFactory;
 
 /***/ },
-/* 11 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(12);
+	module.exports = __webpack_require__(10);
 
 /***/ },
-/* 12 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(13);
-	var bind = __webpack_require__(14);
-	var Axios = __webpack_require__(15);
-	var defaults = __webpack_require__(16);
+	var utils = __webpack_require__(11);
+	var bind = __webpack_require__(12);
+	var Axios = __webpack_require__(13);
+	var defaults = __webpack_require__(14);
 
 	/**
 	 * Create an instance of Axios
@@ -494,15 +611,15 @@ webpackJsonp([0],[
 	};
 
 	// Expose Cancel & CancelToken
-	axios.Cancel = __webpack_require__(34);
-	axios.CancelToken = __webpack_require__(35);
-	axios.isCancel = __webpack_require__(31);
+	axios.Cancel = __webpack_require__(32);
+	axios.CancelToken = __webpack_require__(33);
+	axios.isCancel = __webpack_require__(29);
 
 	// Expose all/spread
 	axios.all = function all(promises) {
 	  return Promise.all(promises);
 	};
-	axios.spread = __webpack_require__(36);
+	axios.spread = __webpack_require__(34);
 
 	module.exports = axios;
 
@@ -511,12 +628,12 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 13 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var bind = __webpack_require__(14);
+	var bind = __webpack_require__(12);
 
 	/*global toString:true*/
 
@@ -816,7 +933,7 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 14 */
+/* 12 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -833,17 +950,17 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 15 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var defaults = __webpack_require__(16);
-	var utils = __webpack_require__(13);
-	var InterceptorManager = __webpack_require__(28);
-	var dispatchRequest = __webpack_require__(29);
-	var isAbsoluteURL = __webpack_require__(32);
-	var combineURLs = __webpack_require__(33);
+	var defaults = __webpack_require__(14);
+	var utils = __webpack_require__(11);
+	var InterceptorManager = __webpack_require__(26);
+	var dispatchRequest = __webpack_require__(27);
+	var isAbsoluteURL = __webpack_require__(30);
+	var combineURLs = __webpack_require__(31);
 
 	/**
 	 * Create a new instance of Axios
@@ -924,13 +1041,13 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 16 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
-	var utils = __webpack_require__(13);
-	var normalizeHeaderName = __webpack_require__(18);
+	var utils = __webpack_require__(11);
+	var normalizeHeaderName = __webpack_require__(16);
 
 	var PROTECTION_PREFIX = /^\)\]\}',?\n/;
 	var DEFAULT_CONTENT_TYPE = {
@@ -947,10 +1064,10 @@ webpackJsonp([0],[
 	  var adapter;
 	  if (typeof XMLHttpRequest !== 'undefined') {
 	    // For browsers use XHR adapter
-	    adapter = __webpack_require__(19);
+	    adapter = __webpack_require__(17);
 	  } else if (typeof process !== 'undefined') {
 	    // For node use HTTP adapter
-	    adapter = __webpack_require__(19);
+	    adapter = __webpack_require__(17);
 	  }
 	  return adapter;
 	}
@@ -1021,10 +1138,10 @@ webpackJsonp([0],[
 
 	module.exports = defaults;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(17)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(15)))
 
 /***/ },
-/* 17 */
+/* 15 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -1210,12 +1327,12 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 18 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(13);
+	var utils = __webpack_require__(11);
 
 	module.exports = function normalizeHeaderName(headers, normalizedName) {
 	  utils.forEach(headers, function processHeader(value, name) {
@@ -1228,18 +1345,18 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 19 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
-	var utils = __webpack_require__(13);
-	var settle = __webpack_require__(20);
-	var buildURL = __webpack_require__(23);
-	var parseHeaders = __webpack_require__(24);
-	var isURLSameOrigin = __webpack_require__(25);
-	var createError = __webpack_require__(21);
-	var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(26);
+	var utils = __webpack_require__(11);
+	var settle = __webpack_require__(18);
+	var buildURL = __webpack_require__(21);
+	var parseHeaders = __webpack_require__(22);
+	var isURLSameOrigin = __webpack_require__(23);
+	var createError = __webpack_require__(19);
+	var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(24);
 
 	module.exports = function xhrAdapter(config) {
 	  return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -1335,7 +1452,7 @@ webpackJsonp([0],[
 	    // This is only done if running in a standard browser environment.
 	    // Specifically not if we're in a web worker, or react-native.
 	    if (utils.isStandardBrowserEnv()) {
-	      var cookies = __webpack_require__(27);
+	      var cookies = __webpack_require__(25);
 
 	      // Add xsrf header
 	      var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -1409,15 +1526,15 @@ webpackJsonp([0],[
 	  });
 	};
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(17)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(15)))
 
 /***/ },
-/* 20 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var createError = __webpack_require__(21);
+	var createError = __webpack_require__(19);
 
 	/**
 	 * Resolve or reject a Promise based on response status.
@@ -1443,12 +1560,12 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 21 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var enhanceError = __webpack_require__(22);
+	var enhanceError = __webpack_require__(20);
 
 	/**
 	 * Create an Error with the specified message, config, error code, and response.
@@ -1466,7 +1583,7 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 22 */
+/* 20 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1491,12 +1608,12 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 23 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(13);
+	var utils = __webpack_require__(11);
 
 	function encode(val) {
 	  return encodeURIComponent(val).
@@ -1565,12 +1682,12 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 24 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(13);
+	var utils = __webpack_require__(11);
 
 	/**
 	 * Parse headers into an object
@@ -1608,12 +1725,12 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 25 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(13);
+	var utils = __webpack_require__(11);
 
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -1682,7 +1799,7 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 26 */
+/* 24 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1724,12 +1841,12 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 27 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(13);
+	var utils = __webpack_require__(11);
 
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -1783,12 +1900,12 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 28 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(13);
+	var utils = __webpack_require__(11);
 
 	function InterceptorManager() {
 	  this.handlers = [];
@@ -1841,15 +1958,15 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 29 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(13);
-	var transformData = __webpack_require__(30);
-	var isCancel = __webpack_require__(31);
-	var defaults = __webpack_require__(16);
+	var utils = __webpack_require__(11);
+	var transformData = __webpack_require__(28);
+	var isCancel = __webpack_require__(29);
+	var defaults = __webpack_require__(14);
 
 	/**
 	 * Throws a `Cancel` if cancellation has been requested.
@@ -1926,12 +2043,12 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 30 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(13);
+	var utils = __webpack_require__(11);
 
 	/**
 	 * Transform the data for a request or a response
@@ -1952,7 +2069,7 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 31 */
+/* 29 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1963,7 +2080,7 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 32 */
+/* 30 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1983,7 +2100,7 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 33 */
+/* 31 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2001,7 +2118,7 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 34 */
+/* 32 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2026,12 +2143,12 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 35 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Cancel = __webpack_require__(34);
+	var Cancel = __webpack_require__(32);
 
 	/**
 	 * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -2089,7 +2206,7 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 36 */
+/* 34 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2120,6 +2237,76 @@ webpackJsonp([0],[
 	  };
 	};
 
+
+/***/ },
+/* 35 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _CRUDReader = __webpack_require__(7);
+
+	var _CRUDReader2 = _interopRequireDefault(_CRUDReader);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; } /**
+	                                                                                                                                                                                                                             CRUDWriter
+	                                                                                                                                                                                                                             如果有id,注入data,update(),remove()
+	                                                                                                                                                                                                                             如果无id,注入save()
+	                                                                                                                                                                                                                             * -> :api  //CRUD API
+	                                                                                                                                                                                                                             * -> :id  //item id
+	                                                                                                                                                                                                                             * ↓  :data //注入的数据
+	                                                                                                                                                                                                                             * ↓  :update //更新数据函数
+	                                                                                                                                                                                                                             * ↓  :remove //删除数据的函数
+	                                                                                                                                                                                                                             * ↓  :save //保存数据的函数
+	                                                                                                                                                                                                                             **/
+
+
+	module.exports = function (_ref) {
+		var api = _ref.api,
+		    id = _ref.id,
+		    _ref$ns = _ref.ns,
+		    ns = _ref$ns === undefined ? "CRUDWriter" : _ref$ns,
+		    children = _ref.children,
+		    others = _objectWithoutProperties(_ref, ['api', 'id', 'ns', 'children']);
+
+		if (id === undefined) {
+			//无id，注入save
+			return _react2.default.cloneElement(children, _extends({
+				save: api.create
+			}, others));
+		} else {
+			//有id,注入data,update,remove
+			return _react2.default.createElement(
+				_CRUDReader2.default,
+				_extends({ api: api, id: id, ns: ns, update: function update(data) {
+						return api.update(data, id);
+					}, remove: function remove() {
+						return api.destory(id);
+					} }, others),
+				children
+			);
+		}
+	};
+
+/***/ },
+/* 36 */
+/***/ function(module, exports) {
+
+	module.exports = PubSub;
+
+/***/ },
+/* 37 */
+/***/ function(module, exports) {
+
+	module.exports = Mock;
 
 /***/ }
 ]);

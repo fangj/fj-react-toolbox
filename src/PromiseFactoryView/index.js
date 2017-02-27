@@ -72,18 +72,20 @@ export default class PromiseFactoryView extends React.Component {
   }
 
   render() {
-    const {then,_catch,children}=this.props;
+    const {then,_catch,children,...others}=this.props;
     const {value,reason}=this.state;
     const child=React.Children.only(children);//children只能有1个
     if(value!==undefined){
       let v=React.cloneElement(child, {
-        [then]: value  //注入value
+        [then]: value,  //注入value
+        ...others //其余属性传给子view
       });
       return v;
     }
     if(reason!==undefined&&_catch!==undefined){
       let v=React.cloneElement(child, {
-        [_catch]: value  //注入value
+        [_catch]: value,  //注入value
+        ...others
       });
       return v;
     }
