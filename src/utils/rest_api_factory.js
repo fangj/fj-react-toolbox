@@ -20,9 +20,9 @@ import axios from 'axios';
 
 
 const restApiFactory=(url,keyField)=>{
-	if(!url.endsWith("/")){ //url应该以"/"结尾
-		url=url+"/";
-	}
+	// if(!url.endsWith("/")){ //url应该以"/"结尾
+	// 	url=url+"/";
+	// }
 	const agent = axios.create({
 	  baseURL: url
 	});

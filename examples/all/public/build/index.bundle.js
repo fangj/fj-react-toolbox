@@ -26,51 +26,72 @@ webpackJsonp([0],[
 	var Mock = __webpack_require__(7);
 
 	var getValue = function getValue(v) {
-	    return Promise.resolve("id:" + v + "/" + Math.random());
+						return Promise.resolve("id:" + v + "/" + Math.random());
 	};
 	var api = { get: getValue };
 	var ValueShower = function ValueShower(_ref) {
-	    var value = _ref.value;
-	    return _react2.default.createElement(
-	        'div',
-	        null,
-	        JSON.stringify(value)
-	    );
+						var value = _ref.value;
+						return _react2.default.createElement(
+											'div',
+											null,
+											JSON.stringify(value)
+						);
 	};
 	var RandomValue = _react2.default.createElement(
-	    _CRUDReader2.default,
-	    { api: api, id: '42', ns: 'RandomValue' },
-	    ' ',
-	    _react2.default.createElement(ValueShower, null),
-	    ' '
+						_CRUDReader2.default,
+						{ api: api, id: '42', ns: 'RandomValue' },
+						_react2.default.createElement(ValueShower, null)
 	);
 	//PubSub.publish("RandomValue") 刷新
 
 
-	Mock.mock("/mockemail", {
-	    'list|1-10': [{
-	        'id|+1': 1,
-	        'email': '@EMAIL'
-	    }]
-	});
+	Mock.mock("/mockemail/", '@EMAIL'); //假数据
 
 	var EmailReader = _react2.default.createElement(
-	    _RestReader2.default,
-	    { url: '/mockemail', ns: 'EmailReader' },
-	    ' ',
-	    _react2.default.createElement(ValueShower, null),
-	    ' '
+						_RestReader2.default,
+						{ url: '/mockemail', ns: 'EmailReader' },
+						_react2.default.createElement(ValueShower, null)
 	);
+	//PubSub.publish("EmailReader") 刷新
 
-	// ReactDOM.render(<ul>
-	// 	<li>{RandomValue}</li>
-	// 	<li>{EmailReader}</li>
-	// 	<li></li>	
-	// </ul> ,
-	//   document.getElementById('root')
-	// );
 
-	_reactDom2.default.render(RandomValue, document.getElementById('root'));
+	_reactDom2.default.render(_react2.default.createElement(
+						'ul',
+						null,
+						_react2.default.createElement(
+											'li',
+											null,
+											_react2.default.createElement(
+																'button',
+																{ onClick: function onClick() {
+																										return PubSub.publish("RandomValue");
+																					} },
+																'PubSub.publish("RandomValue")'
+											)
+						),
+						_react2.default.createElement(
+											'li',
+											null,
+											RandomValue
+						),
+						_react2.default.createElement(
+											'li',
+											null,
+											_react2.default.createElement(
+																'button',
+																{ onClick: function onClick() {
+																										return PubSub.publish("EmailReader");
+																					} },
+																'PubSub.publish("EmailReader")'
+											)
+						),
+						_react2.default.createElement(
+											'li',
+											null,
+											EmailReader
+						),
+						_react2.default.createElement('li', null)
+	), document.getElementById('root'));
 
 /***/ },
 /* 1 */
@@ -297,11 +318,11 @@ webpackJsonp([0],[
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var _CRUDReader = __webpack_require__(36);
+	var _CRUDReader = __webpack_require__(9);
 
 	var _CRUDReader2 = _interopRequireDefault(_CRUDReader);
 
-	var _rest_api_factory = __webpack_require__(9);
+	var _rest_api_factory = __webpack_require__(10);
 
 	var _rest_api_factory2 = _interopRequireDefault(_rest_api_factory);
 
@@ -316,14 +337,9 @@ webpackJsonp([0],[
 
 	module.exports = function (_ref) {
 	  var url = _ref.url,
-	      children = _ref.children,
-	      props = _objectWithoutProperties(_ref, ['url', 'children']);
+	      props = _objectWithoutProperties(_ref, ['url']);
 
-	  return React.createElement(
-	    _CRUDReader2.default,
-	    _extends({ api: (0, _rest_api_factory2.default)(url) }, props),
-	    children
-	  );
+	  return React.createElement(_CRUDReader2.default, _extends({ api: (0, _rest_api_factory2.default)(url) }, props));
 	};
 
 /***/ },
@@ -332,11 +348,42 @@ webpackJsonp([0],[
 
 	"use strict";
 
+	var _PromiseFactoryView = __webpack_require__(4);
+
+	var _PromiseFactoryView2 = _interopRequireDefault(_PromiseFactoryView);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	module.exports = function (_ref) {
+		var api = _ref.api,
+		    id = _ref.id,
+		    _ref$ns = _ref.ns,
+		    ns = _ref$ns === undefined ? "CRUDReader" : _ref$ns,
+		    children = _ref.children;
+		return React.createElement(
+			_PromiseFactoryView2.default,
+			{ promiseFactory: function promiseFactory() {
+					return api.get(id);
+				}, then: "value", ns: ns },
+			children
+		);
+	}; /**
+	   -> :api  //crud api
+	   -> :id  //item id
+	   ↓  :data //注入的数据
+	   **/
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
 
-	var _axios = __webpack_require__(10);
+	var _axios = __webpack_require__(11);
 
 	var _axios2 = _interopRequireDefault(_axios);
 
@@ -361,10 +408,9 @@ webpackJsonp([0],[
 	 */
 
 	var restApiFactory = function restApiFactory(url, keyField) {
-		if (!url.endsWith("/")) {
-			//url应该以"/"结尾
-			url = url + "/";
-		}
+		// if(!url.endsWith("/")){ //url应该以"/"结尾
+		// 	url=url+"/";
+		// }
 		var agent = _axios2.default.create({
 			baseURL: url
 		});
@@ -401,21 +447,21 @@ webpackJsonp([0],[
 	exports.default = restApiFactory;
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(11);
+	module.exports = __webpack_require__(12);
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(12);
-	var bind = __webpack_require__(13);
-	var Axios = __webpack_require__(14);
-	var defaults = __webpack_require__(15);
+	var utils = __webpack_require__(13);
+	var bind = __webpack_require__(14);
+	var Axios = __webpack_require__(15);
+	var defaults = __webpack_require__(16);
 
 	/**
 	 * Create an instance of Axios
@@ -448,15 +494,15 @@ webpackJsonp([0],[
 	};
 
 	// Expose Cancel & CancelToken
-	axios.Cancel = __webpack_require__(33);
-	axios.CancelToken = __webpack_require__(34);
-	axios.isCancel = __webpack_require__(30);
+	axios.Cancel = __webpack_require__(34);
+	axios.CancelToken = __webpack_require__(35);
+	axios.isCancel = __webpack_require__(31);
 
 	// Expose all/spread
 	axios.all = function all(promises) {
 	  return Promise.all(promises);
 	};
-	axios.spread = __webpack_require__(35);
+	axios.spread = __webpack_require__(36);
 
 	module.exports = axios;
 
@@ -465,12 +511,12 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var bind = __webpack_require__(13);
+	var bind = __webpack_require__(14);
 
 	/*global toString:true*/
 
@@ -770,7 +816,7 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -787,17 +833,17 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var defaults = __webpack_require__(15);
-	var utils = __webpack_require__(12);
-	var InterceptorManager = __webpack_require__(27);
-	var dispatchRequest = __webpack_require__(28);
-	var isAbsoluteURL = __webpack_require__(31);
-	var combineURLs = __webpack_require__(32);
+	var defaults = __webpack_require__(16);
+	var utils = __webpack_require__(13);
+	var InterceptorManager = __webpack_require__(28);
+	var dispatchRequest = __webpack_require__(29);
+	var isAbsoluteURL = __webpack_require__(32);
+	var combineURLs = __webpack_require__(33);
 
 	/**
 	 * Create a new instance of Axios
@@ -878,13 +924,13 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
-	var utils = __webpack_require__(12);
-	var normalizeHeaderName = __webpack_require__(17);
+	var utils = __webpack_require__(13);
+	var normalizeHeaderName = __webpack_require__(18);
 
 	var PROTECTION_PREFIX = /^\)\]\}',?\n/;
 	var DEFAULT_CONTENT_TYPE = {
@@ -901,10 +947,10 @@ webpackJsonp([0],[
 	  var adapter;
 	  if (typeof XMLHttpRequest !== 'undefined') {
 	    // For browsers use XHR adapter
-	    adapter = __webpack_require__(18);
+	    adapter = __webpack_require__(19);
 	  } else if (typeof process !== 'undefined') {
 	    // For node use HTTP adapter
-	    adapter = __webpack_require__(18);
+	    adapter = __webpack_require__(19);
 	  }
 	  return adapter;
 	}
@@ -975,10 +1021,10 @@ webpackJsonp([0],[
 
 	module.exports = defaults;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(17)))
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -1164,12 +1210,12 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(12);
+	var utils = __webpack_require__(13);
 
 	module.exports = function normalizeHeaderName(headers, normalizedName) {
 	  utils.forEach(headers, function processHeader(value, name) {
@@ -1182,18 +1228,18 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
-	var utils = __webpack_require__(12);
-	var settle = __webpack_require__(19);
-	var buildURL = __webpack_require__(22);
-	var parseHeaders = __webpack_require__(23);
-	var isURLSameOrigin = __webpack_require__(24);
-	var createError = __webpack_require__(20);
-	var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(25);
+	var utils = __webpack_require__(13);
+	var settle = __webpack_require__(20);
+	var buildURL = __webpack_require__(23);
+	var parseHeaders = __webpack_require__(24);
+	var isURLSameOrigin = __webpack_require__(25);
+	var createError = __webpack_require__(21);
+	var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(26);
 
 	module.exports = function xhrAdapter(config) {
 	  return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -1289,7 +1335,7 @@ webpackJsonp([0],[
 	    // This is only done if running in a standard browser environment.
 	    // Specifically not if we're in a web worker, or react-native.
 	    if (utils.isStandardBrowserEnv()) {
-	      var cookies = __webpack_require__(26);
+	      var cookies = __webpack_require__(27);
 
 	      // Add xsrf header
 	      var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -1363,15 +1409,15 @@ webpackJsonp([0],[
 	  });
 	};
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(17)))
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var createError = __webpack_require__(20);
+	var createError = __webpack_require__(21);
 
 	/**
 	 * Resolve or reject a Promise based on response status.
@@ -1397,12 +1443,12 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var enhanceError = __webpack_require__(21);
+	var enhanceError = __webpack_require__(22);
 
 	/**
 	 * Create an Error with the specified message, config, error code, and response.
@@ -1420,7 +1466,7 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1445,12 +1491,12 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(12);
+	var utils = __webpack_require__(13);
 
 	function encode(val) {
 	  return encodeURIComponent(val).
@@ -1519,12 +1565,12 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(12);
+	var utils = __webpack_require__(13);
 
 	/**
 	 * Parse headers into an object
@@ -1562,12 +1608,12 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(12);
+	var utils = __webpack_require__(13);
 
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -1636,7 +1682,7 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1678,12 +1724,12 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(12);
+	var utils = __webpack_require__(13);
 
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -1737,12 +1783,12 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(12);
+	var utils = __webpack_require__(13);
 
 	function InterceptorManager() {
 	  this.handlers = [];
@@ -1795,15 +1841,15 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(12);
-	var transformData = __webpack_require__(29);
-	var isCancel = __webpack_require__(30);
-	var defaults = __webpack_require__(15);
+	var utils = __webpack_require__(13);
+	var transformData = __webpack_require__(30);
+	var isCancel = __webpack_require__(31);
+	var defaults = __webpack_require__(16);
 
 	/**
 	 * Throws a `Cancel` if cancellation has been requested.
@@ -1880,12 +1926,12 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(12);
+	var utils = __webpack_require__(13);
 
 	/**
 	 * Transform the data for a request or a response
@@ -1906,7 +1952,7 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1917,7 +1963,7 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1937,7 +1983,7 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1955,7 +2001,7 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1980,12 +2026,12 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Cancel = __webpack_require__(33);
+	var Cancel = __webpack_require__(34);
 
 	/**
 	 * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -2043,7 +2089,7 @@ webpackJsonp([0],[
 
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2074,37 +2120,6 @@ webpackJsonp([0],[
 	  };
 	};
 
-
-/***/ },
-/* 36 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var _PromiseFactoryView = __webpack_require__(4);
-
-	var _PromiseFactoryView2 = _interopRequireDefault(_PromiseFactoryView);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	module.exports = function (_ref) {
-		var api = _ref.api,
-		    id = _ref.id,
-		    _ref$ns = _ref.ns,
-		    ns = _ref$ns === undefined ? "CRUDReader" : _ref$ns,
-		    children = _ref.children;
-		return React.createElement(
-			_PromiseFactoryView2.default,
-			{ promiseFactory: function promiseFactory() {
-					return api.get(id);
-				}, then: "value", ns: ns },
-			children
-		);
-	}; /**
-	   -> :api  //crud api
-	   -> :id  //item id
-	   ↓  :data //注入的数据
-	   **/
 
 /***/ }
 ]);

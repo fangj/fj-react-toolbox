@@ -7,29 +7,28 @@ import CRUDReader from '../../../src/CRUDReader';
 const getValue=(v)=>Promise.resolve("id:"+v+"/"+Math.random());
 const api={get:getValue};
 const ValueShower=({value})=><div>{JSON.stringify(value)}</div>;
-const RandomValue=<CRUDReader api={api} id="42" ns="RandomValue"> <ValueShower/> </CRUDReader> 
+const RandomValue=<CRUDReader api={api} id="42" ns="RandomValue">
+						<ValueShower/>
+					</CRUDReader> 
 //PubSub.publish("RandomValue") 刷新
 
 
-Mock.mock("/mockemail", {
-    'list|1-10': [{
-        'id|+1': 1,
-        'email': '@EMAIL'
-    }]
-})
+Mock.mock("/mockemail/", '@EMAIL') //假数据
 
 import RestReader from '../../../src/RestReader';
-const EmailReader=<RestReader url="/mockemail"  ns="EmailReader"> <ValueShower/> </RestReader> 
+const EmailReader=<RestReader url="/mockemail"  ns="EmailReader">
+					<ValueShower/> 
+				  </RestReader> 
+//PubSub.publish("EmailReader") 刷新
 
 
-// ReactDOM.render(<ul>
-// 	<li>{RandomValue}</li>
-// 	<li>{EmailReader}</li>
-// 	<li></li>	
-// </ul> ,
-//   document.getElementById('root')
-// );
-
- ReactDOM.render(RandomValue ,
+ReactDOM.render(<ul>
+	<li><button onClick={()=>PubSub.publish("RandomValue")}>PubSub.publish("RandomValue")</button></li>
+	<li>{RandomValue}</li>
+	<li><button onClick={()=>PubSub.publish("EmailReader")}>PubSub.publish("EmailReader")</button></li>
+	<li>{EmailReader}</li>
+	<li></li>	
+</ul> ,
   document.getElementById('root')
 );
+

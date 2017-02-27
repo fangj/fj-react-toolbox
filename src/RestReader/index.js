@@ -9,4 +9,4 @@ RestReader
 import CRUDReader from '../CRUDReader';
 import restApiFactory from'../utils/rest_api_factory';
 
-module.exports =({url,children,...props})=> <CRUDReader api={restApiFactory(url)}  {...props}>{children}</CRUDReader>
+module.exports =({url,...props})=> <CRUDReader api={restApiFactory(url)}  {...props}/>
