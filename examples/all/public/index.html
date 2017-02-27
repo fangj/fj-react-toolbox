@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>react</title>
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/toastr.css">
+    <link rel="stylesheet" href="css/react-bootstrap-table.css">
+
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/pubsub.min.js"></script>
+    <script src="js/socket.io.min.js"></script>
+
+    <script src="js/react-with-addons.js"></script>
+    <script src="js/react-dom.min.js"></script>
+
+  <link href="vendor/alertify/alertify.core.css" rel="stylesheet">
+    <link href="vendor/alertify/alertify.bootstrap.css" rel="stylesheet">
+    <script src="vendor/alertify/alertify.min.js"></script>
+
+  <link rel="stylesheet" href="vendor/font-awesome/css/font-awesome.min.css">
+  <link href="vendor/grommet/grommet.min.css" rel="stylesheet">
+
+    <!-- toastr -->
+    <link href="vendor/toastr/toastr.min.css" rel="stylesheet">
+    <script src="vendor/toastr/toastr.min.js"></script>
+    <script>
+    PubSub.subscribe( 'msg.error', (msg,str)=>{toastr.error(str)} ); //toast,全局消息。正式代码中也有
+    </script>
+    <script>
+    PubSub.subscribe( 'route', (msg,route)=>{toastr.info("goto:"+route)} ); //方便调试路由跳转，正式代码中不出现
+    </script>
+  <!-- 项目样式资源加载 -->
+  <!-- <link rel="stylesheet" href="build/vendor.css"> -->
+  <!-- <link rel="stylesheet" href="build/index.css"> -->
+
+</head>
+<body>
+  <div id="root"></div>
+  <script src="build/vendor.bundle.js"></script>
+  <script src="build/index.bundle.js"></script>
+</body>
+</html>
