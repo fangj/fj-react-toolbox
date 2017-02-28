@@ -1,6 +1,6 @@
 {
   "name": "fj-react-toolbox",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "react component toolbox ",
   "main": "index.js",
   "scripts": {
